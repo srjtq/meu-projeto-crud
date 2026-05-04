@@ -68,6 +68,34 @@ public class ClienteController {
         return ResponseEntity.noContent().build();
     }
 
+@PutMapping("/{id})")
+    public ResponseEntity<ClienteResponseDTO>atualizar(
+            @PathVariable Long id,
+            @RequestBody ClienteRequestDTO dto) {
+
+        Cliente cliente = new Cliente();
+        cliente.setNome(dto.getNome());
+        cliente.setCpf(dto.getCpf());
+        cliente.setEndereco(dto.getEndereco());
+        cliente.setDataNascimento(dto.getDataNascimento());
+
+        Cliente atualizado = clienteService.atualizar(id, cliente);
+
+        ClienteResponseDTO response = new ClienteResponseDTO(
+            atualizado.getId(),
+            atualizado.getNome(),
+            atualizado.getCpf(),
+            atualizado.getEndereco(),
+            atualizado.getDataNascimento()
+    );
+
+    return ResponseEntity.ok(response);
+}
+
+
+
+
+
 
 }
 

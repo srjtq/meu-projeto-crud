@@ -37,6 +37,27 @@ public class ClienteService {
 
     }
 
+    public Cliente atualizar(Long id, Cliente clienteAtualizado){
+
+        Cliente clienteExistente = clienteRepository.findById(id)
+                .orElseThrow(() -> new RegraNegocioException("Cliente não encontrado"));
+
+        // regra de negócio: CPF não pode repetir (exceto para o próprio cliente)
+        clienteRepository.findByCpf(clienteAtualizado.getCpf())
+                .ifPresent(c -> {
+                    if (!c.getId().equals(id)) {
+                        throw new RegraNegocioException("CPF já cadastrado");
+                    }
+                });
+
+        clienteExistente.setNome(clienteAtualizado.getNome());
+        clienteExistente.setCpf(clienteAtualizado.getCpf());
+        clienteExistente.setEndereco(clienteAtualizado.getEndereco());
+        clienteExistente.setDataNascimento(clienteAtualizado.getDataNascimento());
+
+        return clienteRepository.save(clienteExistente);
+    }
+
     public List<Cliente> listarTodos() {
         return clienteRepository.findAll();
     }
