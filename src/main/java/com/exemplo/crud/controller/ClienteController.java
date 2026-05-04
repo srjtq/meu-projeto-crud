@@ -4,6 +4,7 @@ import com.exemplo.crud.dto.ClienteRequestDTO;
 import com.exemplo.crud.dto.ClienteResponseDTO;
 import com.exemplo.crud.model.Cliente;
 import com.exemplo.crud.service.ClienteService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class ClienteController {
 
     @PostMapping
     public ResponseEntity<ClienteResponseDTO> cadastrar(
-            @RequestBody ClienteRequestDTO dto) {
+            @Valid @RequestBody ClienteRequestDTO dto) {
 
         Cliente cliente = new Cliente();
         cliente.setNome(dto.getNome());
@@ -68,10 +69,10 @@ public class ClienteController {
         return ResponseEntity.noContent().build();
     }
 
-@PutMapping("/{id})")
+    @PutMapping("/{id})")
     public ResponseEntity<ClienteResponseDTO>atualizar(
             @PathVariable Long id,
-            @RequestBody ClienteRequestDTO dto) {
+            @Valid @RequestBody ClienteRequestDTO dto) {
 
         Cliente cliente = new Cliente();
         cliente.setNome(dto.getNome());
