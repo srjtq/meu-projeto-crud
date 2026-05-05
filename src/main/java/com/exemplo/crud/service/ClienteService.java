@@ -10,8 +10,10 @@ import java.util.List;
 @Service
 public class ClienteService {
 
+    //injeção de dependência do repository
     private final ClienteRepository clienteRepository;
 
+    //construtor da injeção de dependência do repository
     public ClienteService(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;
     }

@@ -12,8 +12,8 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("API de Cadastro de Clientes")
-                        .description("API simples para cadastro e consulta de clientes")
+                        .title("API de Cadastro de Clientes e Discos")
+                        .description("API REST para gerenciamento de clientes e discos musicais")
                         .version("1.0.0"));
     }
 }
