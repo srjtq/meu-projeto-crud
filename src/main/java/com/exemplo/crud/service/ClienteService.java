@@ -3,6 +3,8 @@ package com.exemplo.crud.service;
 import com.exemplo.crud.model.Cliente;
 import com.exemplo.crud.repository.ClienteRepository;
 import com.exemplo.crud.exception.RegraNegocioException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -61,7 +63,12 @@ public class ClienteService {
         return clienteRepository.save(clienteExistente);
     }
 
+    // Lista com paginas
+    public Page<Cliente> listarPaginado(Pageable pageable) {
+        return clienteRepository.findAll(pageable);
+    }
 
+    // Lista sem paginas
     public List<Cliente> listarTodos() {
         return clienteRepository.findAll();
     }

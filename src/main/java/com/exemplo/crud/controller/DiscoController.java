@@ -1,5 +1,6 @@
 package com.exemplo.crud.controller;
 
+import com.exemplo.crud.dto.DiscoPatchDTO;
 import com.exemplo.crud.dto.DiscoRequestDTO;
 import com.exemplo.crud.dto.DiscoResponseDTO;
 import com.exemplo.crud.model.Disco;
@@ -47,6 +48,40 @@ public class DiscoController {
         ));
     }
 
+    @Operation(summary = "Cadastrar mais de um disco na mesma operação", description = "Cadastra mais de um disco")
+    @PostMapping("/lote")
+    public ResponseEntity<List<DiscoResponseDTO>> cadastrarEmLote(
+            @Valid @RequestBody List<DiscoRequestDTO> dtos) {
+
+        List<DiscoResponseDTO> resposta = dtos.stream()
+                .map(dto -> {
+                    Disco disco = new Disco();
+                    disco.setCodigoDisco(dto.getCodigoDisco());
+                    disco.setNomeDisco(dto.getNomeDisco());
+                    disco.setArtista(dto.getArtista());
+                    disco.setGenero(dto.getGenero());
+                    disco.setAnoLancamento(dto.getAnoLancamento());
+
+                    Disco salvo = discoService.cadastrar(disco);
+
+                    return new DiscoResponseDTO(
+                            salvo.getId(),
+                            salvo.getCodigoDisco(),
+                            salvo.getNomeDisco(),
+                            salvo.getArtista(),
+                            salvo.getGenero(),
+                            salvo.getAnoLancamento()
+                    );
+                })
+                .toList();
+
+        return ResponseEntity.ok(resposta);
+    }
+
+
+
+
+
     @Operation(summary = "Listar discos", description = "Lista todos os discos cadastrados")
     @GetMapping
     public ResponseEntity<List<DiscoResponseDTO>>listar() {
@@ -88,6 +123,25 @@ public class DiscoController {
                 atualizado.getAnoLancamento()
         ));
     }
+
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<DiscoResponseDTO> atualizarParcial(
+            @PathVariable Long id,
+            @RequestBody DiscoPatchDTO dto) {
+
+        Disco atualizado = discoService.atualizarParcial(id, dto);
+
+        return ResponseEntity.ok(new DiscoResponseDTO(
+                atualizado.getId(),
+                atualizado.getCodigoDisco(),
+                atualizado.getNomeDisco(),
+                atualizado.getArtista(),
+                atualizado.getGenero(),
+                atualizado.getAnoLancamento()
+        ));
+    }
+
 
     @Operation(summary = "Remover disco", description = "Remove um disco pelo ID")
     @DeleteMapping("/{id}")

@@ -5,6 +5,9 @@ import com.exemplo.crud.dto.ClienteResponseDTO;
 import com.exemplo.crud.model.Cliente;
 import com.exemplo.crud.service.ClienteService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +47,25 @@ public class ClienteController {
         return ResponseEntity.ok(response);
     }
 
+    // ✅ GET - Listar clientes COM paginação
+    // Exemplo: /clientes?page=0&size=10
     @GetMapping
+    public ResponseEntity<Page<ClienteResponseDTO>> listarPaginado(
+            @PageableDefault(size = 10) Pageable pageable) {
+
+        Page<ClienteResponseDTO> pagina = clienteService.listarPaginado(pageable)
+                .map(c -> new ClienteResponseDTO(
+                        c.getId(),
+                        c.getNome(),
+                        c.getCpf(),
+                        c.getEndereco(),
+                        c.getDataNascimento()
+                ));
+
+        return ResponseEntity.ok(pagina);
+    }
+
+    @GetMapping("/todos")
     public ResponseEntity<List<ClienteResponseDTO>> listar() {
 
         List<ClienteResponseDTO> lista = clienteService.listarTodos()

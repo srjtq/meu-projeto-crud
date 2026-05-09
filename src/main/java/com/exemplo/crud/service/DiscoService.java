@@ -1,8 +1,11 @@
 package com.exemplo.crud.service;
 
+import com.exemplo.crud.dto.DiscoPatchDTO;
 import com.exemplo.crud.exception.RegraNegocioException;
 import com.exemplo.crud.model.Disco;
 import com.exemplo.crud.repository.DiscoRepository;
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +13,22 @@ import java.util.List;
 @Service
 public class DiscoService {
 
-    private final DiscoRepository discoRepository;
+
+    // Autowired feito no atributo
+    @Autowired
+    private DiscoRepository discoRepository;
 
 
+    // Injeção de depedencia por construtor
+    //private final DiscoRepository discoRepository;
+
+    // Model Mapper
+//    @Autowired
+//   private ModelMapper modelMapper;
+
+
+
+ // Mapeamento manual
     public DiscoService(DiscoRepository discoRepository) {
         this.discoRepository = discoRepository;
    }
@@ -57,7 +73,34 @@ public class DiscoService {
         return discoRepository.save(existente);
     }
 
-   //Deleção
+    //Atualiza parcialmente
+    public Disco atualizarParcial(Long id, DiscoPatchDTO dto) {
+
+        Disco disco = discoRepository.findById(id)
+                .orElseThrow(() -> new RegraNegocioException("Disco não encontrado"));
+
+        if (dto.getCodigoDisco() != null) {
+            disco.setCodigoDisco(dto.getCodigoDisco());
+        }
+        if (dto.getNomeDisco() != null) {
+            disco.setNomeDisco(dto.getNomeDisco());
+        }
+        if (dto.getArtista() != null) {
+            disco.setArtista(dto.getArtista());
+        }
+        if (dto.getGenero() != null) {
+            disco.setGenero(dto.getGenero());
+        }
+        if (dto.getAnoLancamento() != null) {
+            disco.setAnoLancamento(dto.getAnoLancamento());
+        }
+
+        return discoRepository.save(disco);
+    }
+
+
+
+    //Deleção
     //regra: verifica se o código do disco existe, caso contrário retorna mensaagem de erro
     public void remover(Long id) {
         if (!discoRepository.existsById(id)) {
