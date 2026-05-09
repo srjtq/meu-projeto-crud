@@ -22,7 +22,7 @@ public class Venda {
     @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
     private List<ItemVenda> itens;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(precision = 12, scale = 2, nullable = false)
     private BigDecimal valorTotal;
 
 

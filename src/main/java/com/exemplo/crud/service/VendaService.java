@@ -12,6 +12,7 @@ import com.exemplo.crud.repository.VendaRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -41,6 +42,11 @@ public class VendaService {
 
         List<ItemVenda> itens = dto.getItens().stream().map(itemDto -> {
 
+            // ✅ REGRA DE NEGÓCIO
+            if (itemDto.getQuantidade() <= 0) {
+                throw new RegraNegocioException("Quantidade inválida para o disco");
+            }
+
             Disco disco = discoRepository.findById(itemDto.getDiscoId())
                     .orElseThrow(() -> new RegraNegocioException("Disco não encontrado"));
 
@@ -50,9 +56,12 @@ public class VendaService {
             item.setQuantidade(itemDto.getQuantidade());
             item.setPrecoUnitario(itemDto.getPrecoUnitario());
 
-            // ✅ subtotal = quantidade × preço
+            // ✅ subtotal = quantidade × preço (com arredondamento correto)
             BigDecimal subtotal = itemDto.getPrecoUnitario()
-                    .multiply(BigDecimal.valueOf(itemDto.getQuantidade()));
+                    .multiply(BigDecimal.valueOf(itemDto.getQuantidade()))
+                    .setScale(2, RoundingMode.HALF_EVEN);
+
+            // ✅ AGORA O SUBTOTAL É ATRIBUÍDO AO ITEM
             item.setSubtotal(subtotal);
 
             return item;
@@ -63,11 +72,11 @@ public class VendaService {
         // ✅ calcular valor total da venda
         BigDecimal total = itens.stream()
                 .map(ItemVenda::getSubtotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_EVEN);
 
         venda.setValorTotal(total);
 
         return vendaRepository.save(venda);
     }
 }
-

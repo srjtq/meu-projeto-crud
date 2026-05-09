@@ -159,3 +159,12 @@ WHERE TABLE_NAME = 'ITENS_VENDA' [42122-232]
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:491)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
 	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-05-09 19:46:11.573470-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select * from [*]*"; expected "identifier"; SQL statement:
+select * from * [42001-232]
+2026-05-09 19:46:30.567574-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ITENS_VENDAS" not found; SQL statement:
+select * from CLIENTES, DISCOS, VENDAS, ITENS_VENDAS [42102-232]
+2026-05-09 19:47:08.775959-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ITENS_VENDAS" not found; SQL statement:
+SELECT * FROM ITENS_VENDAS [42102-232]

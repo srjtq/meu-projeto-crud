@@ -22,8 +22,10 @@ public class ItemVenda {
 
     private Integer quantidade;
 
+    @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal precoUnitario;
 
+    @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal subtotal;
 
 
