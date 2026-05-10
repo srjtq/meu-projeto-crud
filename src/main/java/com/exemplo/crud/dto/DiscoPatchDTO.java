@@ -1,15 +1,17 @@
 package com.exemplo.crud.dto;
 
+import com.exemplo.crud.model.enums.GeneroDisco;
+
 public class DiscoPatchDTO {
 
     private String codigoDisco;
     private String nomeDisco;
     private String artista;
-    private String genero;
+
+    // ✅ PATCH também usa ENUM
+    private GeneroDisco genero;
+
     private Integer anoLancamento;
-
-    // getters e setters
-
 
     public String getCodigoDisco() {
         return codigoDisco;
@@ -35,11 +37,11 @@ public class DiscoPatchDTO {
         this.artista = artista;
     }
 
-    public String getGenero() {
+    public GeneroDisco getGenero() {
         return genero;
     }
 
-    public void setGenero(String genero) {
+    public void setGenero(GeneroDisco genero) {
         this.genero = genero;
     }
 

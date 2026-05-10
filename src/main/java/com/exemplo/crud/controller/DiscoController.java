@@ -24,6 +24,7 @@ public class DiscoController {
         this.discoService = discoService;
     }
 
+    // ✅ POST - cadastrar disco
     @Operation(summary = "Cadastrar disco", description = "Cadastra um novo disco")
     @PostMapping
     public ResponseEntity<DiscoResponseDTO> cadastrar(
@@ -33,7 +34,7 @@ public class DiscoController {
         disco.setCodigoDisco(dto.getCodigoDisco());
         disco.setNomeDisco(dto.getNomeDisco());
         disco.setArtista(dto.getArtista());
-        disco.setGenero(dto.getGenero());
+        disco.setGenero(dto.getGenero()); // ✅ enum
         disco.setAnoLancamento(dto.getAnoLancamento());
 
         Disco salvo = discoService.cadastrar(disco);
@@ -43,12 +44,16 @@ public class DiscoController {
                 salvo.getCodigoDisco(),
                 salvo.getNomeDisco(),
                 salvo.getArtista(),
-                salvo.getGenero(),
+                salvo.getGenero(), // ✅ enum
                 salvo.getAnoLancamento()
         ));
     }
 
-    @Operation(summary = "Cadastrar mais de um disco na mesma operação", description = "Cadastra mais de um disco")
+    // ✅ POST - cadastrar discos em lote
+    @Operation(
+            summary = "Cadastrar discos em lote",
+            description = "Cadastra mais de um disco na mesma operação"
+    )
     @PostMapping("/lote")
     public ResponseEntity<List<DiscoResponseDTO>> cadastrarEmLote(
             @Valid @RequestBody List<DiscoRequestDTO> dtos) {
@@ -59,7 +64,7 @@ public class DiscoController {
                     disco.setCodigoDisco(dto.getCodigoDisco());
                     disco.setNomeDisco(dto.getNomeDisco());
                     disco.setArtista(dto.getArtista());
-                    disco.setGenero(dto.getGenero());
+                    disco.setGenero(dto.getGenero()); // ✅ enum
                     disco.setAnoLancamento(dto.getAnoLancamento());
 
                     Disco salvo = discoService.cadastrar(disco);
@@ -69,7 +74,7 @@ public class DiscoController {
                             salvo.getCodigoDisco(),
                             salvo.getNomeDisco(),
                             salvo.getArtista(),
-                            salvo.getGenero(),
+                            salvo.getGenero(), // ✅ enum
                             salvo.getAnoLancamento()
                     );
                 })
@@ -78,27 +83,27 @@ public class DiscoController {
         return ResponseEntity.ok(resposta);
     }
 
-
-
-
-
+    // ✅ GET - listar discos
     @Operation(summary = "Listar discos", description = "Lista todos os discos cadastrados")
     @GetMapping
-    public ResponseEntity<List<DiscoResponseDTO>>listar() {
-        return ResponseEntity.ok(
-                discoService.listar().stream()
-                        .map(d -> new DiscoResponseDTO(
-                                d.getId(),
-                                d.getCodigoDisco(),
-                                d.getNomeDisco(),
-                                d.getArtista(),
-                                d.getGenero(),
-                                d.getAnoLancamento()
-                        )).toList()
-        );
+    public ResponseEntity<List<DiscoResponseDTO>> listar() {
+
+        List<DiscoResponseDTO> lista = discoService.listar()
+                .stream()
+                .map(d -> new DiscoResponseDTO(
+                        d.getId(),
+                        d.getCodigoDisco(),
+                        d.getNomeDisco(),
+                        d.getArtista(),
+                        d.getGenero(), // ✅ enum
+                        d.getAnoLancamento()
+                ))
+                .toList();
+
+        return ResponseEntity.ok(lista);
     }
 
-
+    // ✅ PUT - atualizar disco
     @Operation(summary = "Atualizar disco", description = "Atualiza um disco pelo ID")
     @PutMapping("/{id}")
     public ResponseEntity<DiscoResponseDTO> atualizar(
@@ -109,7 +114,7 @@ public class DiscoController {
         disco.setCodigoDisco(dto.getCodigoDisco());
         disco.setNomeDisco(dto.getNomeDisco());
         disco.setArtista(dto.getArtista());
-        disco.setGenero(dto.getGenero());
+        disco.setGenero(dto.getGenero()); // ✅ enum
         disco.setAnoLancamento(dto.getAnoLancamento());
 
         Disco atualizado = discoService.atualizar(id, disco);
@@ -119,12 +124,13 @@ public class DiscoController {
                 atualizado.getCodigoDisco(),
                 atualizado.getNomeDisco(),
                 atualizado.getArtista(),
-                atualizado.getGenero(),
+                atualizado.getGenero(), // ✅ enum
                 atualizado.getAnoLancamento()
         ));
     }
 
-
+    // ✅ PATCH - atualização parcial
+    @Operation(summary = "Atualizar parcialmente disco", description = "Atualiza parcialmente um disco pelo ID")
     @PatchMapping("/{id}")
     public ResponseEntity<DiscoResponseDTO> atualizarParcial(
             @PathVariable Long id,
@@ -137,12 +143,12 @@ public class DiscoController {
                 atualizado.getCodigoDisco(),
                 atualizado.getNomeDisco(),
                 atualizado.getArtista(),
-                atualizado.getGenero(),
+                atualizado.getGenero(), // ✅ enum
                 atualizado.getAnoLancamento()
         ));
     }
 
-
+    // ✅ DELETE - remover disco
     @Operation(summary = "Remover disco", description = "Remove um disco pelo ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remover(@PathVariable Long id) {
@@ -150,5 +156,3 @@ public class DiscoController {
         return ResponseEntity.noContent().build();
     }
 }
-
-

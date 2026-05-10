@@ -1,5 +1,6 @@
 package com.exemplo.crud.model;
 
+import com.exemplo.crud.model.enums.GeneroDisco;
 import jakarta.persistence.*;
 
 @Entity
@@ -19,27 +20,22 @@ public class Disco {
     @Column(nullable = false)
     private String artista;
 
+    // ✅ AGORA CORRETO: ENUM DE VERDADE
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String genero;
+    private GeneroDisco genero;
 
     @Column(nullable = false)
     private Integer anoLancamento;
 
-    //CONSTRUTOR VAZIO
-    public Disco(){
-
+    // construtor vazio (JPA)
+    public Disco() {
     }
 
-
-    //GETTERS E SETTERS
-
+    // getters e setters
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getCodigoDisco() {
@@ -66,11 +62,11 @@ public class Disco {
         this.artista = artista;
     }
 
-    public String getGenero() {
+    public GeneroDisco getGenero() {
         return genero;
     }
 
-    public void setGenero(String genero) {
+    public void setGenero(GeneroDisco genero) {
         this.genero = genero;
     }
 

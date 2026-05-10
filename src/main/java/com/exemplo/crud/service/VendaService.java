@@ -2,10 +2,8 @@ package com.exemplo.crud.service;
 
 import com.exemplo.crud.dto.VendaRequestDTO;
 import com.exemplo.crud.exception.RegraNegocioException;
-import com.exemplo.crud.model.Cliente;
-import com.exemplo.crud.model.Disco;
-import com.exemplo.crud.model.ItemVenda;
-import com.exemplo.crud.model.Venda;
+import com.exemplo.crud.model.*;
+import com.exemplo.crud.model.enums.StatusVenda;
 import com.exemplo.crud.repository.ClienteRepository;
 import com.exemplo.crud.repository.DiscoRepository;
 import com.exemplo.crud.repository.VendaRepository;
@@ -39,12 +37,13 @@ public class VendaService {
         Venda venda = new Venda();
         venda.setCliente(cliente);
         venda.setDataVenda(LocalDateTime.now());
+        venda.setFormaPagamento(dto.getFormaPagamento());
+        venda.setStatus(StatusVenda.REALIZADA);
 
         List<ItemVenda> itens = dto.getItens().stream().map(itemDto -> {
 
-            // ✅ REGRA DE NEGÓCIO
             if (itemDto.getQuantidade() <= 0) {
-                throw new RegraNegocioException("Quantidade inválida para o disco");
+                throw new RegraNegocioException("Quantidade inválida");
             }
 
             Disco disco = discoRepository.findById(itemDto.getDiscoId())
@@ -56,20 +55,17 @@ public class VendaService {
             item.setQuantidade(itemDto.getQuantidade());
             item.setPrecoUnitario(itemDto.getPrecoUnitario());
 
-            // ✅ subtotal = quantidade × preço (com arredondamento correto)
             BigDecimal subtotal = itemDto.getPrecoUnitario()
                     .multiply(BigDecimal.valueOf(itemDto.getQuantidade()))
                     .setScale(2, RoundingMode.HALF_EVEN);
 
-            // ✅ AGORA O SUBTOTAL É ATRIBUÍDO AO ITEM
             item.setSubtotal(subtotal);
-
             return item;
+
         }).toList();
 
         venda.setItens(itens);
 
-        // ✅ calcular valor total da venda
         BigDecimal total = itens.stream()
                 .map(ItemVenda::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)

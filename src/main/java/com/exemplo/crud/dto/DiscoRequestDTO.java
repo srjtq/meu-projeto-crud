@@ -1,48 +1,34 @@
 package com.exemplo.crud.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.exemplo.crud.model.enums.GeneroDisco;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 
 public class DiscoRequestDTO {
 
-    @NotBlank(message = "Código do disco é obrigatório")
-    @Schema(example = "D001", description = "Código único do disco")
+    @NotBlank
     private String codigoDisco;
 
-
-    @NotBlank(message = "Nome do disco é obrigatório")
-    @Schema(example = "Hybrid Theory", description = "Nome do disco")
+    @NotBlank
     private String nomeDisco;
 
-
-    @NotBlank(message = "Artista é obrigatório")
-    @Schema(example = "Linkin Park", description = "Artista ou banda")
+    @NotBlank
     private String artista;
 
+    // ✅ AGORA É ENUM (NÃO STRING)
+    @NotNull
+    private GeneroDisco genero;
 
-    @NotBlank(message = "Gênero é obrigatório")
-    @Schema(example = "Rock", description = "Gênero musical")
-    private String genero;
-
-
-    @NotNull(message = "Ano de lançamento é obrigatório")
-    @Positive(message = "Ano de lançamento deve ser positivo")
-    @Schema(example = "2000", description = "Ano de lançamento")
+    @NotNull
     private Integer anoLancamento;
-
-    //GETTERS E SETTERS
 
     public String getCodigoDisco() {
         return codigoDisco;
     }
 
-
     public void setCodigoDisco(String codigoDisco) {
         this.codigoDisco = codigoDisco;
     }
-
 
     public String getNomeDisco() {
         return nomeDisco;
@@ -60,11 +46,11 @@ public class DiscoRequestDTO {
         this.artista = artista;
     }
 
-    public String getGenero() {
+    public GeneroDisco getGenero() {
         return genero;
     }
 
-    public void setGenero(String genero) {
+    public void setGenero(GeneroDisco genero) {
         this.genero = genero;
     }
 

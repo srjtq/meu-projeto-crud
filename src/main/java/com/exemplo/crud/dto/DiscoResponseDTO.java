@@ -1,5 +1,6 @@
 package com.exemplo.crud.dto;
 
+import com.exemplo.crud.model.enums.GeneroDisco;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class DiscoResponseDTO {
@@ -16,14 +17,28 @@ public class DiscoResponseDTO {
     @Schema(example = "Linkin Park")
     private String artista;
 
-    @Schema(example = "Rock")
-    private String genero;
+    @Schema(example = "ROCK")
+    private GeneroDisco genero;
 
     @Schema(example = "2000")
     private Integer anoLancamento;
 
+    // ✅ CONSTRUTOR ALINHADO COM ENUM
+    public DiscoResponseDTO(Long id,
+                            String codigoDisco,
+                            String nomeDisco,
+                            String artista,
+                            GeneroDisco genero,
+                            Integer anoLancamento) {
+        this.id = id;
+        this.codigoDisco = codigoDisco;
+        this.nomeDisco = nomeDisco;
+        this.artista = artista;
+        this.genero = genero;
+        this.anoLancamento = anoLancamento;
+    }
 
-    //getters
+    // getters
 
     public Long getId() {
         return id;
@@ -41,22 +56,11 @@ public class DiscoResponseDTO {
         return artista;
     }
 
-    public String getGenero() {
+    public GeneroDisco getGenero() {
         return genero;
     }
 
     public Integer getAnoLancamento() {
         return anoLancamento;
-    }
-
-    public DiscoResponseDTO(Long id, String codigoDisco, String nomeDisco,
-                            String artista, String genero, Integer anoLancamento){
-        this.id = id;
-        this.codigoDisco = codigoDisco;
-        this.nomeDisco = nomeDisco;
-        this.artista = artista;
-        this.genero = genero;
-        this.anoLancamento = anoLancamento;
-
     }
 }
