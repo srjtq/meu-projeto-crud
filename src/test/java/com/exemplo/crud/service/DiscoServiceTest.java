@@ -2,6 +2,7 @@ package com.exemplo.crud.service;
 
 import com.exemplo.crud.exception.RegraNegocioException;
 import com.exemplo.crud.model.Disco;
+import com.exemplo.crud.model.enums.GeneroDisco;
 import com.exemplo.crud.repository.DiscoRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,15 +60,16 @@ class DiscoServiceTest {
     @Test
     void deveAtualizarDiscoComSucesso() {
         Disco existente = criarDisco();
-        existente.setId(1L);
-
         Disco atualizado = criarDisco();
         atualizado.setNomeDisco("Disco Atualizado");
 
         when(discoRepository.findById(1L))
                 .thenReturn(Optional.of(existente));
+
+        // ✅ CENÁRIO CORRETO: NÃO EXISTE OUTRO DISCO COM O MESMO CÓDIGO
         when(discoRepository.findByCodigoDisco(atualizado.getCodigoDisco()))
-                .thenReturn(Optional.of(existente));
+                .thenReturn(Optional.empty());
+
         when(discoRepository.save(any(Disco.class)))
                 .thenReturn(existente);
 
@@ -81,10 +83,7 @@ class DiscoServiceTest {
     @Test
     void naoDeveAtualizarComCodigoDeOutroDisco() {
         Disco existente = criarDisco();
-        existente.setId(1L);
-
         Disco outro = criarDisco();
-        outro.setId(2L);
         outro.setCodigoDisco("D002");
 
         when(discoRepository.findById(1L))
@@ -117,13 +116,13 @@ class DiscoServiceTest {
                 () -> discoService.remover(1L));
     }
 
-    // 🔧 MÉTODO AUXILIAR PARA CRIAR DISCO
+    // 🔧 MÉTODO AUXILIAR
     private Disco criarDisco() {
         Disco d = new Disco();
         d.setCodigoDisco("D001");
         d.setNomeDisco("Disco Teste");
         d.setArtista("Artista Teste");
-        d.setGenero("Rock");
+        d.setGenero(GeneroDisco.ROCK);
         d.setAnoLancamento(1999);
         return d;
     }

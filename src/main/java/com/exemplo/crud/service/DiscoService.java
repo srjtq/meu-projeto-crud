@@ -2,7 +2,6 @@ package com.exemplo.crud.service;
 
 import com.exemplo.crud.exception.RegraNegocioException;
 import com.exemplo.crud.model.Disco;
-import com.exemplo.crud.model.enums.GeneroDisco;
 import com.exemplo.crud.repository.DiscoRepository;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +37,8 @@ public class DiscoService {
 
         discoRepository.findByCodigoDisco(discoAtualizado.getCodigoDisco())
                 .ifPresent(outro -> {
-                    if (!outro.getId().equals(id)) {
+                    // ✅ COMPARAÇÃO SEGURA (SEM NPE)
+                    if (!id.equals(outro.getId())) {
                         throw new RegraNegocioException("Código do disco já cadastrado");
                     }
                 });
@@ -46,14 +46,7 @@ public class DiscoService {
         existente.setCodigoDisco(discoAtualizado.getCodigoDisco());
         existente.setNomeDisco(discoAtualizado.getNomeDisco());
         existente.setArtista(discoAtualizado.getArtista());
-
-        // ✅ AQUI ESTAVA O PROBLEMA: agora é ENUM
-        GeneroDisco genero = discoAtualizado.getGenero();
-        if (genero == null) {
-            throw new RegraNegocioException("Gênero do disco é obrigatório");
-        }
-        existente.setGenero(genero);
-
+        existente.setGenero(discoAtualizado.getGenero());
         existente.setAnoLancamento(discoAtualizado.getAnoLancamento());
 
         return discoRepository.save(existente);
@@ -76,7 +69,6 @@ public class DiscoService {
             existente.setArtista(dto.getArtista());
         }
 
-        // ✅ PATCH agora usa ENUM
         if (dto.getGenero() != null) {
             existente.setGenero(dto.getGenero());
         }
