@@ -90,7 +90,7 @@ public class ClienteController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id})")
+    @PutMapping("/{id}")
     public ResponseEntity<ClienteResponseDTO>atualizar(
             @PathVariable Long id,
             @Valid @RequestBody ClienteRequestDTO dto) {
